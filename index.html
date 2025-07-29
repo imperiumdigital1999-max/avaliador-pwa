@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Avaliador de Texto</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4CAF50">
+</head>
+<body style="font-family: Arial, sans-serif; padding: 40px; text-align: center;">
+
+  <h2>🔔 Ativar Notificações</h2>
+  <p>Clique no botão abaixo para permitir e testar uma notificação.</p>
+
+  <button onclick="ativarNotificacao()" style="padding: 12px 24px; font-size: 16px;">Ativar e Testar</button>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker registrado com sucesso'))
+        .catch(err => console.log('Erro ao registrar o Service Worker', err));
+    }
+
+    function ativarNotificacao() {
+      if (!("Notification" in window)) {
+        alert("Este navegador não suporta notificações.");
+        return;
+      }
+
+      if (Notification.permission === "granted") {
+        mostrarNotificacao();
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            mostrarNotificacao();
+          } else {
+            alert("Permissão negada para notificações.");
+          }
+        });
+      } else {
+        alert("Permissão para notificações já foi negada.");
+      }
+    }
+
+    function mostrarNotificacao() {
+      const notificacao = new Notification("📬 Novo texto para avaliar", {
+        body: "Você recebeu uma nova tarefa. Clique para ver agora!",
+        icon: "icon-192.png",
+        requireInteraction: true
+      });
+
+      notificacao.onclick = () => {
+        window.focus();
+        window.location.href = "/";
+      };
+    }
+  </script>
+
+</body>
+</html>
