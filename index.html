@@ -9,10 +9,10 @@
 </head>
 <body style="font-family: Arial, sans-serif; padding: 40px; text-align: center;">
 
-  <h2>🔔 Ativar Notificações</h2>
-  <p>Clique no botão abaixo para permitir e testar uma notificação.</p>
+  <h2>🔔 Notificação Estilo Nubank</h2>
+  <p>Clique no botão abaixo para permitir e testar uma notificação Nubank-like.</p>
 
-  <button onclick="ativarNotificacao()" style="padding: 12px 24px; font-size: 16px;">Ativar e Testar</button>
+  <button onclick="mostrarNotificacao(1900)" style="padding: 12px 24px; font-size: 16px;">Simular Notificação</button>
 
   <script>
     if ('serviceWorker' in navigator) {
@@ -21,18 +21,18 @@
         .catch(err => console.log('Erro ao registrar o Service Worker', err));
     }
 
-    function ativarNotificacao() {
+    function mostrarNotificacao(valor) {
       if (!("Notification" in window)) {
         alert("Este navegador não suporta notificações.");
         return;
       }
 
       if (Notification.permission === "granted") {
-        mostrarNotificacao();
+        criarNotificacao(valor);
       } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then(permission => {
           if (permission === "granted") {
-            mostrarNotificacao();
+            criarNotificacao(valor);
           } else {
             alert("Permissão negada para notificações.");
           }
@@ -42,10 +42,10 @@
       }
     }
 
-    function mostrarNotificacao() {
-      const notificacao = new Notification("📬 Novo texto para avaliar", {
-        body: "Você recebeu uma nova tarefa. Clique para ver agora!",
-        icon: "icon-192.png",
+    function criarNotificacao(valor) {
+      const notificacao = new Notification("💰 Transferência recebida", {
+        body: `Recebemos sua transferência de R$ ${valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}.`,
+        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Nubank_logo_2021.svg/1024px-Nubank_logo_2021.svg.png",
         requireInteraction: true
       });
 
